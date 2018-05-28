@@ -1,2 +1,3 @@
 # 2018-Tp5-homework
-Homework
+
+CRUD simples desenvolvido em Javacript utilizando localStorage. 

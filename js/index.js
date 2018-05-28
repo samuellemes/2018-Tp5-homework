@@ -31,5 +31,4 @@ function createTr() {
 
 function createTd(inputName, inputIdade, inputTel, inputEmail) {
     var td = document.createElement('td')
-    
 }
