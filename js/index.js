@@ -154,5 +154,6 @@ function cancelEdit() {
     
     clearFields(inputName, inputIdade, inputTel, inputEmail)
 }
-// Iniciando
+
+// Inicializando
 init()
