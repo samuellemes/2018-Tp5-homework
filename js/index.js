@@ -3,7 +3,7 @@ var editRowIndex = -1
 function init() {
     var btSave = document.getElementById('btn-save')
     btSave.onclick = function() {
-        addName()
+        addPerson()
     }
 
     var btCancel = document.getElementById('btn-cancel')
@@ -16,7 +16,7 @@ function init() {
     }
 }
 
-function addName() {
+function addPerson() {
     var inputName = document.getElementById('nome')
     var inputIdade = document.getElementById('idade')
     var inputTel = document.getElementById('tel')
@@ -112,6 +112,8 @@ function editPerson() {
     inputIdade.value = tableDatas[1].innerHTML
     inputTel.value = tableDatas[2].innerHTML
     inputEmail.value = tableDatas[3].innerHTML
+
+    inputName.focus()
 }
 
 function deletePerson() {
@@ -127,6 +129,8 @@ function deletePerson() {
         tbody.removeChild(tr)
     }
 
+    var inputName = document.getElementById('nome')
+    inputName.focus()
 }
 
 function updatePerson(inputName, inputIdade, inputTel, inputEmail) {
