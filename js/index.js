@@ -13,22 +13,58 @@ function addName() {
     var inputTel = document.getElementById('tel')
     var inputEmail = document.getElementById('email')
     
-    if(validateInput(inputName.value) && validateInput(inputIdade.value) && validateInput(inputTel.value) && validateInput(inputEmail.value)) {
-        var tr = createTr()
-        var td = createTd()
+    if(isValidInput(inputName) && isValidInput(inputIdade) && isValidInput(inputTel) && isValidInput(inputEmail)) {
+        createPerson(inputName, inputIdade, inputTel, inputEmail)
     } else {
         alert('Preencha todos os campos.')
     }
 }
 
-function validateInput(input) {
-    return input.trim() != ""
+function isValidInput(input) {
+    return input.value.trim() != ""
 }
 
-function createTr() {
-    return document.createElement('tr')
+function createPerson(inputName, inputIdade, inputTel, inputEmail) {
+    var tr = createLine()
+    var tdName = createTd(inputName.value)
+    var tdIdade = createTd(inputIdade.value)
+    var tdTel = createTd(inputTel.value)
+    var tdEmail = createTd(inputEmail.value)
+    var tdEdit = createTd('')
+    var tdDelete = createTd('')
+
+    var btnEdit = createBtn('Edit')
+    tdEdit.appendChild(btnEdit)
+    var btnDelete = createBtn('Delete')
+    tdDelete.appendChild(btnDelete)
+
+    var tblPessoa = document.getElementById('tblPessoa')
+    var tbody = tblPessoa.tBodies[0]
+
+    tr.appendChild(tdName)
+    tr.appendChild(tdIdade)
+    tr.appendChild(tdTel)
+    tr.appendChild(tdEmail)
+    tr.appendChild(tdEdit)
+    tr.appendChild(tdDelete)
+
+    tbody.appendChild(tr)
 }
 
-function createTd(inputName, inputIdade, inputTel, inputEmail) {
+function createLine() {
+    var tr = document.createElement('tr')
+    return tr
+}
+
+function createTd(content) {
     var td = document.createElement('td')
+    td.innerHTML = content
+    return td
+}
+
+function createBtn(value) {
+    var btn = document.createElement('input')
+    btn.type = 'button'
+    btn.value = value
+    return btn
 }
