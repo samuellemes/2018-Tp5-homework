@@ -1,16 +1,17 @@
 var editRowIndex = -1
+var persons = []
 
-function init() {
+function  init () {
     var btSave = document.getElementById('btn-save')
     btSave.onclick = function() {
         addPerson()
     }
-
+    
     var btCancel = document.getElementById('btn-cancel')
     btCancel.onclick = function() {
         if(editRowIndex != -1) {
             if(window.confirm("Você realmente deseja cancelar edição?")) {
-                cancelEdit()
+              cancelEdit()
             }
         }
     }
@@ -24,7 +25,8 @@ function addPerson() {
     
     if(isValidInput(inputName) && isValidInput(inputIdade) && isValidInput(inputTel) && isValidInput(inputEmail)) {
         if(editRowIndex == -1) {
-            createPerson(inputName, inputIdade, inputTel, inputEmail)
+            createItem(inputName, inputIdade, inputTel, inputEmail)
+            persons.forEach(createPerson)
         } else {
             updatePerson(inputName, inputIdade, inputTel, inputEmail)
         }
@@ -33,6 +35,7 @@ function addPerson() {
         editRowIndex = -1
     } else {
         alert('Preencha todos os campos.')
+        inputName.focus()
     }
 }
 
@@ -40,19 +43,23 @@ function isValidInput(input) {
     return input.value.trim() != ""
 }
 
-function createPerson(inputName, inputIdade, inputTel, inputEmail) {
+function createPerson(person) {
     var tr = createLine()
-    var tdName = createTd(inputName.value)
-    var tdIdade = createTd(inputIdade.value)
-    var tdTel = createTd(inputTel.value)
-    var tdEmail = createTd(inputEmail.value)
+    var tdName = createTd(person.Nome)
+    var tdIdade = createTd(person.Idade)
+    var tdTel = createTd(person.Tel)
+    var tdEmail = createTd(person.Email)
     var tdEdit = createTd('')
     var tdDelete = createTd('')
 
     var btnEdit = createBtn('Edit')
-    btnEdit.onclick = editPerson
+    btnEdit.onclick = function() {
+        editPerson(person)
+    }
     var btnDelete = createBtn('Delete')
-    btnDelete.onclick = deletePerson
+    btnDelete.onclick = function() {
+        deletePerson(person)
+    }
     
     tdEdit.appendChild(btnEdit)
     tdDelete.appendChild(btnDelete)
@@ -97,29 +104,29 @@ function clearFields(inputName, inputIdade, inputTel, inputEmail) {
     inputName.focus()
 }
 
-function editPerson() {
-    var td = this.parentNode
-    var tr = td.parentNode
-    editRowIndex = tr.rowIndex
-    
-    var tableDatas = tr.childNodes
+function editPerson(person) {
+    editRowIndex = persons.indexOf(person)
+
     var inputName = document.getElementById('nome')
     var inputIdade = document.getElementById('idade')
     var inputTel = document.getElementById('tel')
     var inputEmail = document.getElementById('email')
 
-    inputName.value = tableDatas[0].innerHTML
-    inputIdade.value = tableDatas[1].innerHTML
-    inputTel.value = tableDatas[2].innerHTML
-    inputEmail.value = tableDatas[3].innerHTML
+    inputName.value = person.Nome
+    inputIdade.value = person.Idade
+    inputTel.value = person.Tel
+    inputEmail.value = person.Email
 
     inputName.focus()
 }
 
 function deletePerson() {
-    
+    //aqui
     if(editRowIndex != -1) {
-        alert('Você está no modo de edição!')
+        if(window.confirm("Você não pode apagar registros modo de edição." +
+                          "\nDeseja cancelar edição?")) {
+                cancelEdit()
+        }
     } else {
         var td = this.parentNode
         var tr = td.parentNode
@@ -154,6 +161,31 @@ function cancelEdit() {
     
     clearFields(inputName, inputIdade, inputTel, inputEmail)
 }
+
+
+// List
+
+function createItem(inputName, inputIdade, inputTel, inputEmail) {
+    getList()
+    var person = {
+        Nome: inputName.value,
+        Idade: inputIdade.value,
+        Tel: inputTel.value,
+        Email: inputEmail.value
+    }
+    persons.push(person)
+    var personsTxt = JSON.stringify(persons);
+    window.localStorage.setItem('list-persons', personsTxt);
+}
+
+function getList() {
+    var personsTxt = window.localStorage.getItem('list-persons');
+    if(personsTxt) {
+        persons = JSON.parse(personsTxt);
+    }  
+}
+
+
 
 // Inicializando
 init()
