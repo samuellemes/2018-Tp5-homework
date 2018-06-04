@@ -25,10 +25,10 @@ function addPerson() {
     
     if(isValidInput(inputName) && isValidInput(inputIdade) && isValidInput(inputTel) && isValidInput(inputEmail)) {
         if(editRowIndex == -1) {
-            createItem(inputName, inputIdade, inputTel, inputEmail)
-            persons.forEach(createPerson)
+            createItemList(inputName, inputIdade, inputTel, inputEmail)
+            updateList()
         } else {
-            updatePerson(inputName, inputIdade, inputTel, inputEmail)
+            updatePerson(editRowIndex)
         }
 
         clearFields(inputName, inputIdade, inputTel, inputEmail)
@@ -120,7 +120,7 @@ function editPerson(person) {
     inputName.focus()
 }
 
-function deletePerson() {
+function deletePerson(person) {
     //aqui
     if(editRowIndex != -1) {
         if(window.confirm("Você não pode apagar registros modo de edição." +
@@ -128,27 +128,26 @@ function deletePerson() {
                 cancelEdit()
         }
     } else {
-        var td = this.parentNode
-        var tr = td.parentNode
-    
-        var tblPerson = document.getElementById('tblPessoa')
-        var tbody = tblPerson.tBodies[0]
-        tbody.removeChild(tr)
+        persons.splice(person, 1)
+        updateList()
     }
 
     var inputName = document.getElementById('nome')
     inputName.focus()
 }
 
-function updatePerson(inputName, inputIdade, inputTel, inputEmail) {
-    var tblPerson = document.getElementById('tblPessoa')
-    var tbody = tblPerson.tBodies[0]
-    var tr = tbody.children[editRowIndex]
+function updatePerson(person) {
+    var inputName = document.getElementById('nome')
+    var inputIdade = document.getElementById('idade')
+    var inputTel = document.getElementById('tel')
+    var inputEmail = document.getElementById('email')
 
-    tr.childNodes[0].innerHTML = inputName.value
-    tr.childNodes[1].innerHTML = inputIdade.value
-    tr.childNodes[2].innerHTML = inputTel.value
-    tr.childNodes[3].innerHTML = inputEmail.value
+    person.Nome = inputName.value
+    person.Idade = inputIdade.value
+    person.Tel = inputTel.value
+    person.Email = inputEmail.value
+
+    updateList()
 }
 
 function cancelEdit() {
@@ -165,8 +164,9 @@ function cancelEdit() {
 
 // List
 
-function createItem(inputName, inputIdade, inputTel, inputEmail) {
-    getList()
+getList()
+
+function createItemList(inputName, inputIdade, inputTel, inputEmail) {
     var person = {
         Nome: inputName.value,
         Idade: inputIdade.value,
@@ -174,15 +174,27 @@ function createItem(inputName, inputIdade, inputTel, inputEmail) {
         Email: inputEmail.value
     }
     persons.push(person)
-    var personsTxt = JSON.stringify(persons);
-    window.localStorage.setItem('list-persons', personsTxt);
 }
 
 function getList() {
     var personsTxt = window.localStorage.getItem('list-persons');
     if(personsTxt) {
         persons = JSON.parse(personsTxt);
+        persons.forEach(createPerson)
     }  
+}
+
+function updateList() {
+    var personsTxt = JSON.stringify(persons);
+    window.localStorage.setItem('list-persons', personsTxt);
+
+    var tblPessoa = document.getElementById('tblPessoa')
+    var tbody = tblPessoa.tBodies[0]
+    var children = tbody.children
+
+    tblPessoa.removeChild(children)
+
+    persons.forEach(createPerson)
 }
 
 
